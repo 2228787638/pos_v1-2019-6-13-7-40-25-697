@@ -57,4 +57,41 @@ const loadAllPromotion=()=>{
     }
     return saveList;
 }
+//calculateReceipt 选择优惠计算总价和节省
+const calculateReceipt = orders =>{
+    const promotions = loadPromotions();
+    const saveList = new Array();
+    const ordersAndSaving= {};
+    const ordersASaving= [];
+    let allTotal=0;
+    let saving=0;
+    let actualTotal=0;
+    for(const promotion of promotions){
+    	if(promotion.type==='BUY_TWO_GET_ONE_FREE'){
+    		for (const save of promotion.barcodes){
+    			saveList.push(save);
+    		}
+    	}
+    }
+    for (const order of orders){
+    	actualTotal+=order.price*order.count;
+    	const orderAndSaving ={};
+        const freeCount = Math.floor(order.count / 3);
+    	orderAndSaving.name=order.name;
+        orderAndSaving.count=order.count;
+        orderAndSaving.unit=order.unit;
+    	orderAndSaving.price=order.price;
+    	if(saveList.indexOf(order.id)>-1){
+    		orderAndSaving.total=order.price*(order.count-freeCount);
+   	 	}else{
+   	 		orderAndSaving.total=order.price*order.count;
+   	 	}
+   	 	allTotal+=orderAndSaving.total;
+    	ordersASaving.push(orderAndSaving);
+    }
+    ordersAndSaving.ordersASaving=ordersASaving;
+    ordersAndSaving.allTotal=allTotal;
+    ordersAndSaving.saving=actualTotal-allTotal;
+    return ordersAndSaving;
+}
 
