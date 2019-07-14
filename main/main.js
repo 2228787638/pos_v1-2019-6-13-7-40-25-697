@@ -94,4 +94,19 @@ const calculateReceipt = orders =>{
     ordersAndSaving.saving=actualTotal-allTotal;
     return ordersAndSaving;
 }
-
+//渲染
+const renderReceipt = ordersAndSaving=>{
+    let headMessage= `***<没钱赚商店>收据***\n`;
+    let messafe="";
+    const ordersASaving=ordersAndSaving.ordersASaving;
+    ordersASaving.forEach(element => {
+     messafe+=`名称：${element.name}，数量：${element.count}${element.unit}，单价：${element.price.toFixed(2)}(元)，小计：${element.total.toFixed(2)}(元)\n`;
+    });
+    messafe+=`----------------------\n总计：${ordersAndSaving.allTotal.toFixed(2)}(元)\n节省：${ordersAndSaving.saving.toFixed(2)}(元)\n`;
+ 
+    let tailMessage= `**********************`;
+    return headMessage+messafe+tailMessage;
+ }
+ const printReceipt= barcodes=>{
+    console.log(renderReceipt(calculateReceipt(getItems(decodeBarcodes(barcodes)))));
+}
